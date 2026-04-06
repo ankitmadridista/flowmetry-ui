@@ -1,0 +1,212 @@
+/* ── Customer List ──────────────────────────────────────────── */
+.customer-page {
+  padding: 32px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: var(--sans);
+}
+
+.customer-page h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0 0 24px;
+  letter-spacing: -0.5px;
+}
+
+.customer-table-wrap {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.customer-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.customer-table thead {
+  background: var(--code-bg);
+}
+
+.customer-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.customer-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-h);
+  vertical-align: middle;
+}
+
+.customer-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.customer-table tbody tr {
+  cursor: pointer;
+}
+
+.customer-table tbody tr:hover {
+  background: var(--accent-bg);
+}
+
+/* ── Risk Band Badge ────────────────────────────────────────── */
+.risk-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.risk-low    { background: #dcfce7; color: #15803d; }
+.risk-medium { background: #fef3c7; color: #b45309; }
+.risk-high   { background: #fee2e2; color: #b91c1c; }
+
+/* ── Detail Panel ───────────────────────────────────────────── */
+.detail-page {
+  padding: 32px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: var(--sans);
+}
+
+.detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 20px;
+  font-family: var(--sans);
+  opacity: 0.7;
+  transition: opacity 0.15s;
+}
+
+.detail-back:hover { opacity: 1; }
+
+.detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.detail-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0 0 4px;
+  letter-spacing: -0.4px;
+}
+
+.detail-header p {
+  font-size: 14px;
+  color: var(--text);
+  opacity: 0.65;
+  margin: 0;
+}
+
+.detail-section {
+  margin-bottom: 32px;
+}
+
+.detail-section h2 {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text);
+  opacity: 0.65;
+  margin: 0 0 12px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.detail-stat {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.detail-stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text);
+  opacity: 0.6;
+  margin-bottom: 4px;
+}
+
+.detail-stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-h);
+  font-variant-numeric: tabular-nums;
+}
+
+.detail-table-wrap {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.detail-table th {
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text);
+  background: var(--code-bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-h);
+}
+
+.detail-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.empty-detail {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--text);
+  opacity: 0.5;
+  font-size: 14px;
+}

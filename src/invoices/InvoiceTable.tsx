@@ -1,10 +1,12 @@
 import type { InvoiceSummaryDto } from './invoices.api';
+import { formatCurrency } from '../utils/currency';
 
 interface InvoiceTableProps {
   items: InvoiceSummaryDto[];
   sortBy: 'dueDate' | 'amount';
   sortDir: 'asc' | 'desc';
   onSortChange: (col: 'dueDate' | 'amount') => void;
+  onRowClick?: (id: string) => void;
 }
 
 const statusClass: Record<string, string> = {
@@ -20,7 +22,7 @@ const statusLabel: Record<string, string> = {
   PartiallyPaid: 'Partially Paid',
 };
 
-export function InvoiceTable({ items, sortBy, sortDir, onSortChange }: InvoiceTableProps): React.JSX.Element {
+export function InvoiceTable({ items, sortBy, sortDir, onSortChange, onRowClick }: InvoiceTableProps): React.JSX.Element {
   function indicator(col: 'dueDate' | 'amount') {
     if (col !== sortBy) return null;
     return <span className="sort-icon">{sortDir === 'asc' ? '▲' : '▼'}</span>;
@@ -54,10 +56,14 @@ export function InvoiceTable({ items, sortBy, sortDir, onSortChange }: InvoiceTa
           </tr>
         ) : (
           items.map(item => (
-            <tr key={item.id}>
+            <tr
+              key={item.id}
+              onClick={() => onRowClick?.(item.id)}
+              style={onRowClick ? { cursor: 'pointer' } : undefined}
+            >
               <td><span className="invoice-id">INV-{String(item.invoiceNumber).padStart(5, '0')}</span></td>
               <td>{item.customerName}</td>
-              <td><span className="amount">{item.amount.toFixed(2)}</span></td>
+              <td><span className="amount">{formatCurrency(item.amount)}</span></td>
               <td>{item.dueDate}</td>
               <td>
                 <span className={`status-badge ${statusClass[item.status] ?? ''}`}>

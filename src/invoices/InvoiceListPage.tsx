@@ -4,9 +4,14 @@ import type { InvoiceFilter, InvoiceSummaryDto } from './invoices.api';
 import { FilterBar } from './FilterBar';
 import { InvoiceTable } from './InvoiceTable';
 import { PaginationControls } from './PaginationControls';
+import CreateInvoiceModal from './CreateInvoiceModal';
 import './invoices.css';
 
-export default function InvoiceListPage(): React.JSX.Element {
+interface Props {
+  onInvoiceSelect?: (id: string) => void;
+}
+
+export default function InvoiceListPage({ onInvoiceSelect }: Props): React.JSX.Element {
   const [filter, setFilter] = useState<InvoiceFilter>({});
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(25);
@@ -16,31 +21,24 @@ export default function InvoiceListPage(): React.JSX.Element {
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showCreate, setShowCreate] = useState(false);
 
-  useEffect(() => {
+  function fetchInvoices() {
     let ignored = false;
     setLoading(true);
     setError(null);
     getInvoices({ ...filter, page, pageSize, sortBy, sortDir })
       .then(result => {
-        if (!ignored) {
-          setItems(result.items);
-          setTotalCount(result.totalCount);
-        }
+        if (!ignored) { setItems(result.items); setTotalCount(result.totalCount); }
       })
-      .catch(err => {
-        if (!ignored) setError(err.message);
-      })
-      .finally(() => {
-        if (!ignored) setLoading(false);
-      });
+      .catch(err => { if (!ignored) setError(err.message); })
+      .finally(() => { if (!ignored) setLoading(false); });
     return () => { ignored = true; };
-  }, [filter, page, pageSize, sortBy, sortDir]);
-
-  function onFilterChange(f: InvoiceFilter) {
-    setFilter(f);
-    setPage(0);
   }
+
+  useEffect(fetchInvoices, [filter, page, pageSize, sortBy, sortDir]);
+
+  function onFilterChange(f: InvoiceFilter) { setFilter(f); setPage(0); }
 
   function onSortChange(col: 'dueDate' | 'amount') {
     if (col === sortBy) {
@@ -54,7 +52,10 @@ export default function InvoiceListPage(): React.JSX.Element {
 
   return (
     <div className="invoice-page">
-      <h1>Invoices</h1>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+        <h1 style={{ margin: 0 }}>Invoices</h1>
+        <button className="btn-primary" onClick={() => setShowCreate(true)}>+ New Invoice</button>
+      </div>
       <FilterBar value={filter} onFilterChange={onFilterChange} />
       {error && <p className="error-state" role="alert">{error}</p>}
       {loading
@@ -66,6 +67,7 @@ export default function InvoiceListPage(): React.JSX.Element {
               sortBy={sortBy}
               sortDir={sortDir}
               onSortChange={onSortChange}
+              onRowClick={onInvoiceSelect}
             />
           </div>
         )
@@ -77,6 +79,16 @@ export default function InvoiceListPage(): React.JSX.Element {
         onPageChange={setPage}
         onPageSizeChange={ps => { setPageSize(ps); setPage(0); }}
       />
+      {showCreate && (
+        <CreateInvoiceModal
+          onClose={() => setShowCreate(false)}
+          onCreated={id => {
+            setShowCreate(false);
+            fetchInvoices();
+            onInvoiceSelect?.(id);
+          }}
+        />
+      )}
     </div>
   );
 }

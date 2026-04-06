@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { InvoiceFilter } from './invoices.api';
+import DatePicker from '../components/DatePicker';
 
 interface FilterBarProps {
   value: InvoiceFilter;
@@ -66,23 +67,21 @@ export function FilterBar({ value, onFilterChange }: FilterBarProps): React.JSX.
 
       <div className="filter-field">
         <label htmlFor="dueDateFrom">Due From</label>
-        <input
+        <DatePicker
           id="dueDateFrom"
-          type="date"
           value={draft.dueDateFrom ?? ''}
-          onChange={e => setDraft(prev => ({ ...prev, dueDateFrom: e.target.value || undefined }))}
-          aria-label="dueDateFrom"
+          onChange={v => setDraft(prev => ({ ...prev, dueDateFrom: v || undefined }))}
+          ariaLabel="dueDateFrom"
         />
       </div>
 
       <div className="filter-field">
         <label htmlFor="dueDateTo">Due To</label>
-        <input
+        <DatePicker
           id="dueDateTo"
-          type="date"
           value={draft.dueDateTo ?? ''}
-          onChange={e => setDraft(prev => ({ ...prev, dueDateTo: e.target.value || undefined }))}
-          aria-label="dueDateTo"
+          onChange={v => setDraft(prev => ({ ...prev, dueDateTo: v || undefined }))}
+          ariaLabel="dueDateTo"
         />
       </div>
 

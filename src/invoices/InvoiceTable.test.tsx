@@ -49,9 +49,10 @@ describe('InvoiceTable', () => {
 
   it('formats amount with two decimal places', () => {
     render(<InvoiceTable items={sampleItems} sortBy="dueDate" sortDir="asc" onSortChange={vi.fn()} />);
-    expect(screen.getByText('100.50')).toBeInTheDocument();
-    expect(screen.getByText('200.00')).toBeInTheDocument();
-    expect(screen.getByText('9.99')).toBeInTheDocument();
+    // Amounts formatted as INR currency via Intl.NumberFormat
+    expect(screen.getByText('₹100.50')).toBeInTheDocument();
+    expect(screen.getByText('₹200.00')).toBeInTheDocument();
+    expect(screen.getByText('₹9.99')).toBeInTheDocument();
   });
 
   it('displays date in YYYY-MM-DD format', () => {
