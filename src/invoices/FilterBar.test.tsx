@@ -8,7 +8,7 @@ const emptyFilter: InvoiceFilter = {};
 describe('FilterBar', () => {
   it('renders customerId input', () => {
     render(<FilterBar value={emptyFilter} onFilterChange={vi.fn()} />);
-    expect(screen.getByLabelText('customerId')).toBeInTheDocument();
+    expect(screen.getByLabelText('customerName')).toBeInTheDocument();
   });
 
   it('renders status dropdown with All/Draft/Sent/Paid/Overdue options', () => {
@@ -16,7 +16,7 @@ describe('FilterBar', () => {
     const select = screen.getByLabelText('status');
     expect(select).toBeInTheDocument();
     const options = Array.from((select as HTMLSelectElement).options).map(o => o.value);
-    expect(options).toEqual(['All', 'Draft', 'Sent', 'Paid', 'Overdue']);
+    expect(options).toEqual(['All', 'Draft', 'Sent', 'PartiallyPaid', 'Paid', 'Overdue', 'Cancelled']);
   });
 
   it('renders dueDateFrom and dueDateTo date inputs', () => {

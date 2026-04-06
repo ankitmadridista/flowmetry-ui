@@ -1,3 +1,4 @@
+/// <reference types="@testing-library/jest-dom" />
 import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -19,8 +20,8 @@ const emptyResult: PagedResult = { items: [], totalCount: 0, page: 0, pageSize: 
 
 const sampleItems: PagedResult = {
   items: [
-    { id: 'inv-1', customerId: 'cust-1', amount: 100.5, dueDate: '2024-01-15', status: 'Sent' },
-    { id: 'inv-2', customerId: 'cust-2', amount: 200.0, dueDate: '2024-02-20', status: 'Paid' },
+    { id: 'inv-1', invoiceNumber: 1, customerName: 'Acme Corp', amount: 100.5, dueDate: '2024-01-15', status: 'Sent' },
+    { id: 'inv-2', invoiceNumber: 2, customerName: 'Globex Ltd', amount: 200.0, dueDate: '2024-02-20', status: 'Paid' },
   ],
   totalCount: 2,
   page: 0,
@@ -50,10 +51,10 @@ describe('InvoiceListPage', () => {
 
     render(<InvoiceListPage />);
 
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    expect(screen.getByText('Loading…')).toBeInTheDocument();
 
     await act(async () => { resolve(emptyResult); });
-    await waitFor(() => expect(screen.queryByText('Loading...')).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByText('Loading…')).not.toBeInTheDocument());
   });
 
   it('renders table rows on successful fetch (Req 2.3)', async () => {
@@ -62,8 +63,8 @@ describe('InvoiceListPage', () => {
     render(<InvoiceListPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('inv-1')).toBeInTheDocument();
-      expect(screen.getByText('inv-2')).toBeInTheDocument();
+      expect(screen.getByText('INV-00001')).toBeInTheDocument();
+      expect(screen.getByText('INV-00002')).toBeInTheDocument();
     });
   });
 
@@ -85,7 +86,7 @@ describe('InvoiceListPage', () => {
 
     // Change a field then submit to trigger onFilterChange with a new filter value
     await act(async () => {
-      await userEvent.type(screen.getByLabelText('customerId'), 'cust-abc');
+      await userEvent.type(screen.getByLabelText('customerName'), 'Acme');
       await userEvent.click(screen.getByRole('button', { name: /apply/i }));
     });
 

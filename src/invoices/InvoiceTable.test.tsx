@@ -4,9 +4,9 @@ import { InvoiceTable } from './InvoiceTable';
 import type { InvoiceSummaryDto } from './invoices.api';
 
 const sampleItems: InvoiceSummaryDto[] = [
-  { id: 'inv-1', customerId: 'cust-a', amount: 100.5, dueDate: '2024-03-15', status: 'Sent' },
-  { id: 'inv-2', customerId: 'cust-b', amount: 200, dueDate: '2024-04-01', status: 'Paid' },
-  { id: 'inv-3', customerId: 'cust-c', amount: 9.99, dueDate: '2024-05-20', status: 'Draft' },
+  { id: 'inv-1', invoiceNumber: 1, customerName: 'Acme Corp', amount: 100.5, dueDate: '2024-03-15', status: 'Sent' },
+  { id: 'inv-2', invoiceNumber: 2, customerName: 'Globex Ltd', amount: 200, dueDate: '2024-04-01', status: 'Paid' },
+  { id: 'inv-3', invoiceNumber: 3, customerName: 'Initech', amount: 9.99, dueDate: '2024-05-20', status: 'Draft' },
 ];
 
 describe('InvoiceTable', () => {
@@ -19,8 +19,8 @@ describe('InvoiceTable', () => {
 
   it('renders all five column headers', () => {
     render(<InvoiceTable items={sampleItems} sortBy="dueDate" sortDir="asc" onSortChange={vi.fn()} />);
-    expect(screen.getByText('Invoice ID')).toBeInTheDocument();
-    expect(screen.getByText('Customer ID')).toBeInTheDocument();
+    expect(screen.getByText('Invoice #')).toBeInTheDocument();
+    expect(screen.getByText('Customer')).toBeInTheDocument();
     expect(screen.getByText(/Amount/)).toBeInTheDocument();
     expect(screen.getByText(/Due Date/)).toBeInTheDocument();
     expect(screen.getByText('Status')).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe('InvoiceTable', () => {
   it('does not show indicator on inactive sort column', () => {
     render(<InvoiceTable items={sampleItems} sortBy="dueDate" sortDir="asc" onSortChange={vi.fn()} />);
     const amountBtn = screen.getByRole('button', { name: /Amount/ });
-    expect(amountBtn.textContent).toBe('Amount');
+    expect(amountBtn.textContent?.trim()).toBe('Amount');
   });
 
   it('formats amount with two decimal places', () => {

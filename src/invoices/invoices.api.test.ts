@@ -3,7 +3,7 @@ import { getInvoices, serializeFilter, type InvoiceFilter, type PagedResult } fr
 
 const mockPagedResult: PagedResult = {
   items: [
-    { id: 'inv-1', customerId: 'cust-1', amount: 100.5, dueDate: '2025-01-15', status: 'Sent' },
+    { id: 'inv-1', invoiceNumber: 1, customerName: 'Acme Corp', amount: 100.5, dueDate: '2025-01-15', status: 'Sent' },
   ],
   totalCount: 1,
   page: 0,

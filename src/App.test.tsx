@@ -9,7 +9,7 @@ vi.mock('./invoices/invoices.api', () => ({
 describe('App', () => {
   it('renders InvoiceListPage', () => {
     render(<App />);
-    // InvoiceListPage renders a filter form and invoice table
-    expect(screen.getByRole('table')).toBeInTheDocument();
+    // FilterBar renders immediately regardless of fetch state
+    expect(screen.getByRole('button', { name: /apply filters/i })).toBeInTheDocument();
   });
 });
