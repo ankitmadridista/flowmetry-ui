@@ -15,6 +15,15 @@
   letter-spacing: -0.5px;
 }
 
+@media (max-width: 768px) {
+  .invoice-page {
+    padding: 20px 16px;
+  }
+  .invoice-page h1 {
+    font-size: 22px;
+  }
+}
+
 /* ── Filter Bar ─────────────────────────────────────────── */
 .filter-bar {
   background: var(--bg);
@@ -33,6 +42,23 @@
   flex-direction: column;
   gap: 6px;
   flex: 1 1 160px;
+  min-width: 0;
+}
+
+@media (max-width: 600px) {
+  .filter-bar {
+    padding: 16px;
+    gap: 12px;
+  }
+  .filter-field {
+    flex: 1 1 calc(50% - 6px);
+  }
+  .filter-actions {
+    width: 100%;
+  }
+  .filter-actions .btn-primary {
+    width: 100%;
+  }
 }
 
 .filter-field label {
@@ -92,11 +118,14 @@
   border: 1px solid var(--border);
   border-radius: 10px;
   overflow: hidden;
+  overflow-x: auto;
   margin-bottom: 16px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .invoice-table {
   width: 100%;
+  min-width: 560px;
   border-collapse: collapse;
   font-size: 14px;
 }
@@ -238,6 +267,17 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 480px) {
+  .pagination {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .page-size-label {
+    display: none;
+  }
 }
 
 .btn-page {
@@ -307,6 +347,26 @@
   width: 100%;
   max-width: 440px;
   box-shadow: var(--shadow);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@media (max-width: 480px) {
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .modal {
+    border-radius: 16px 16px 0 0;
+    padding: 24px 20px;
+    max-height: 85vh;
+  }
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+  .form-actions button {
+    width: 100%;
+  }
 }
 
 .modal h2 {

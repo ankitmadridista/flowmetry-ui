@@ -21,12 +21,28 @@
   margin: 0 0 32px;
 }
 
+@media (max-width: 768px) {
+  .dashboard-page {
+    padding: 20px 16px;
+  }
+  .dashboard-page h1 {
+    font-size: 22px;
+  }
+}
+
 /* ── Metric Cards ───────────────────────────────────────────── */
 .metric-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 16px;
   margin-bottom: 40px;
+}
+
+@media (max-width: 480px) {
+  .metric-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
 }
 
 .metric-card {
@@ -37,6 +53,15 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+@media (max-width: 480px) {
+  .metric-card {
+    padding: 14px 16px;
+  }
+  .metric-value {
+    font-size: 20px !important;
+  }
 }
 
 .metric-card.overdue {
@@ -75,12 +100,15 @@
 /* ── Nav ────────────────────────────────────────────────────── */
 .app-nav {
   border-bottom: 1px solid var(--border);
-  padding: 0 40px;
+  padding: 0 24px;
   display: flex;
   align-items: center;
   gap: 4px;
   height: 52px;
   background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 
 .app-nav-brand {
@@ -88,11 +116,12 @@
   font-weight: 700;
   color: var(--text-h);
   letter-spacing: -0.3px;
-  margin-right: 24px;
+  margin-right: 16px;
+  flex-shrink: 0;
 }
 
 .nav-link {
-  padding: 6px 12px;
+  padding: 6px 10px;
   border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
@@ -103,6 +132,7 @@
   border: none;
   font-family: var(--sans);
   transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
 }
 
 .nav-link:hover {
@@ -114,6 +144,21 @@
   background: var(--accent-bg);
   color: var(--accent);
   font-weight: 600;
+}
+
+@media (max-width: 480px) {
+  .app-nav {
+    padding: 0 12px;
+    gap: 2px;
+  }
+  .app-nav-brand {
+    font-size: 14px;
+    margin-right: 8px;
+  }
+  .nav-link {
+    padding: 6px 8px;
+    font-size: 13px;
+  }
 }
 
 /* ── Loading / Error (shared) ───────────────────────────────── */
