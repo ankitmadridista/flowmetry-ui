@@ -4,6 +4,8 @@ import InvoiceListPage from './invoices/InvoiceListPage';
 import InvoiceDetailPage from './invoices/InvoiceDetailPage';
 import CustomerListPage from './customers/CustomerListPage';
 import CustomerDetailPage from './customers/CustomerDetailPage';
+import LoginPage from './auth/LoginPage';
+import { useAuth } from './auth/AuthContext';
 import { useTheme } from './utils/useTheme';
 import './dashboard/dashboard.css';
 
@@ -17,6 +19,9 @@ type View =
 export default function App(): React.JSX.Element {
   const [view, setView] = useState<View>({ page: 'dashboard' });
   const { theme, toggle } = useTheme();
+  const { isAuthenticated, user, signOut } = useAuth();
+
+  if (!isAuthenticated) return <LoginPage />;
 
   const activePage: TopPage =
     view.page === 'invoice-detail'
@@ -53,6 +58,14 @@ export default function App(): React.JSX.Element {
           aria-label="Toggle theme"
         >
           {theme === 'dark' ? '☀️' : '🌙'}
+        </button>
+        {user && (
+          <span style={{ fontSize: '13px', color: 'var(--text)', opacity: 0.7, marginLeft: '8px' }}>
+            {user.displayName}
+          </span>
+        )}
+        <button className="nav-link" onClick={signOut} style={{ color: 'var(--text)' }}>
+          Sign out
         </button>
       </nav>
 

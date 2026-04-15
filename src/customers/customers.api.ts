@@ -1,3 +1,5 @@
+import { fetchWithAuth } from '../auth/fetchWithAuth';
+
 const API_BASE = import.meta.env.VITE_API_URL ?? '';
 
 export interface CustomerSummaryDto {
@@ -26,33 +28,32 @@ export interface CustomerInvoiceSummaryDto {
 }
 
 export async function getCustomers(): Promise<CustomerSummaryDto[]> {
-  const res = await fetch(`${API_BASE}/api/customers`);
+  const res = await fetchWithAuth(`${API_BASE}/api/customers`);
   if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
   return res.json();
 }
 
 export async function getCustomer(id: string): Promise<CustomerSummaryDto> {
-  const res = await fetch(`${API_BASE}/api/customers/${id}`);
+  const res = await fetchWithAuth(`${API_BASE}/api/customers/${id}`);
   if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
   return res.json();
 }
 
 export async function getCustomerRiskProfile(id: string): Promise<RiskProfileDto> {
-  const res = await fetch(`${API_BASE}/api/customers/${id}/risk-profile`);
+  const res = await fetchWithAuth(`${API_BASE}/api/customers/${id}/risk-profile`);
   if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
   return res.json();
 }
 
 export async function getCustomerInvoices(id: string): Promise<CustomerInvoiceSummaryDto[]> {
-  const res = await fetch(`${API_BASE}/api/customers/${id}/invoices`);
+  const res = await fetchWithAuth(`${API_BASE}/api/customers/${id}/invoices`);
   if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
   return res.json();
 }
 
 export async function createCustomer(name: string, email: string): Promise<string> {
-  const res = await fetch(`${API_BASE}/api/customers`, {
+  const res = await fetchWithAuth(`${API_BASE}/api/customers`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name, email }),
   });
   if (!res.ok) {

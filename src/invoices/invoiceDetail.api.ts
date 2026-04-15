@@ -1,3 +1,5 @@
+import { fetchWithAuth } from '../auth/fetchWithAuth';
+
 const API_BASE = import.meta.env.VITE_API_URL ?? '';
 
 export interface PaymentDto {
@@ -26,13 +28,13 @@ export interface ReminderDto {
 }
 
 export async function getInvoiceDetails(id: string): Promise<InvoiceDetailsDto> {
-  const res = await fetch(`${API_BASE}/api/invoices/${id}`);
+  const res = await fetchWithAuth(`${API_BASE}/api/invoices/${id}`);
   if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
   return res.json();
 }
 
 export async function getInvoiceReminders(id: string): Promise<ReminderDto[]> {
-  const res = await fetch(`${API_BASE}/api/invoices/${id}/reminders`);
+  const res = await fetchWithAuth(`${API_BASE}/api/invoices/${id}/reminders`);
   if (!res.ok) throw new Error(`Request failed with status ${res.status}`);
   return res.json();
 }
@@ -40,13 +42,12 @@ export async function getInvoiceReminders(id: string): Promise<ReminderDto[]> {
 export interface CreateInvoiceRequest {
   customerId: string;
   amount: number;
-  dueDate: string; // YYYY-MM-DD
+  dueDate: string;
 }
 
 export async function createInvoice(req: CreateInvoiceRequest): Promise<string> {
-  const res = await fetch(`${API_BASE}/api/invoices`, {
+  const res = await fetchWithAuth(`${API_BASE}/api/invoices`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(req),
   });
   if (!res.ok) {
@@ -58,9 +59,8 @@ export async function createInvoice(req: CreateInvoiceRequest): Promise<string> 
 }
 
 export async function recordPayment(invoiceId: string, amount: number): Promise<void> {
-  const res = await fetch(`${API_BASE}/api/invoices/${invoiceId}/payments`, {
+  const res = await fetchWithAuth(`${API_BASE}/api/invoices/${invoiceId}/payments`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ amount }),
   });
   if (!res.ok) {
@@ -70,9 +70,8 @@ export async function recordPayment(invoiceId: string, amount: number): Promise<
 }
 
 export async function sendInvoice(invoiceId: string): Promise<void> {
-  const res = await fetch(`${API_BASE}/api/invoices/${invoiceId}/send`, {
+  const res = await fetchWithAuth(`${API_BASE}/api/invoices/${invoiceId}/send`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
   });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));

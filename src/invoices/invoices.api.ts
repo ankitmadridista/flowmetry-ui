@@ -37,11 +37,13 @@ export function serializeFilter(filter: InvoiceFilter): URLSearchParams {
   return params;
 }
 
+import { fetchWithAuth } from '../auth/fetchWithAuth';
+
 const API_BASE = import.meta.env.VITE_API_URL ?? '';
 
 export async function getInvoices(filter: InvoiceFilter): Promise<PagedResult> {
   const params = serializeFilter(filter);
-  const response = await fetch(`${API_BASE}/api/invoices?${params.toString()}`);
+  const response = await fetchWithAuth(`${API_BASE}/api/invoices?${params.toString()}`);
   if (!response.ok) {
     throw new Error(`Request failed with status ${response.status}`);
   }

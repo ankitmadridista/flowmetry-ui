@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { vi, describe, it, expect } from 'vitest';
 import App from './App';
+import { AuthProvider } from './auth/AuthContext';
 
 vi.mock('./invoices/invoices.api', () => ({
   getInvoices: vi.fn().mockReturnValue(new Promise(() => {})),
@@ -10,9 +11,32 @@ vi.mock('./dashboard/dashboard.api', () => ({
   getCashflowSummary: vi.fn().mockReturnValue(new Promise(() => {})),
 }));
 
+// Mock auth so the app renders the main layout (not the login page)
+vi.mock('./auth/AuthContext', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('./auth/AuthContext')>();
+  return {
+    ...actual,
+    useAuth: () => ({
+      isAuthenticated: true,
+      user: { id: '1', email: 'test@test.com', displayName: 'Test User' },
+      token: 'mock-token',
+      signIn: vi.fn(),
+      signOut: vi.fn(),
+    }),
+  };
+});
+
+function renderApp() {
+  return render(
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  );
+}
+
 describe('App', () => {
   it('renders nav with all page links', () => {
-    render(<App />);
+    renderApp();
     expect(screen.getByText('Flowmetry')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Dashboard' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Invoices' })).toBeInTheDocument();
@@ -20,7 +44,7 @@ describe('App', () => {
   });
 
   it('shows Dashboard page by default', () => {
-    render(<App />);
+    renderApp();
     expect(screen.getByRole('button', { name: 'Dashboard' })).toHaveClass('active');
   });
 });
