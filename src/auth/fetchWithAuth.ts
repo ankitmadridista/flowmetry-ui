@@ -1,11 +1,4 @@
-import { getStoredToken } from './AuthContext';
-
-export function authHeaders(): HeadersInit {
-  const token = getStoredToken();
-  return token
-    ? { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }
-    : { 'Content-Type': 'application/json' };
-}
+import { getStoredToken, getSignOut } from './AuthContext';
 
 export async function fetchWithAuth(url: string, init?: RequestInit): Promise<Response> {
   const token = getStoredToken();
@@ -14,5 +7,13 @@ export async function fetchWithAuth(url: string, init?: RequestInit): Promise<Re
     ...(init?.headers ?? {}),
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
-  return fetch(url, { ...init, headers });
+
+  const response = await fetch(url, { ...init, headers });
+
+  // Token expired or invalid — sign out and let the UI redirect to login
+  if (response.status === 401) {
+    getSignOut()?.();
+  }
+
+  return response;
 }

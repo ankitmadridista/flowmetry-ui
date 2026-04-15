@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   getCustomer, getCustomerRiskProfile, getCustomerInvoices,
   type CustomerSummaryDto, type RiskProfileDto, type CustomerInvoiceSummaryDto,
@@ -17,13 +18,9 @@ const statusClass: Record<string, string> = {
 
 const statusLabel: Record<string, string> = { PartiallyPaid: 'Partially Paid' };
 
-interface Props {
-  customerId: string;
-  onBack: () => void;
-  onInvoiceSelect: (id: string) => void;
-}
-
-export default function CustomerDetailPage({ customerId, onBack, onInvoiceSelect }: Props): React.JSX.Element {
+export default function CustomerDetailPage(): React.JSX.Element {
+  const { id: customerId } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [customer, setCustomer] = useState<CustomerSummaryDto | null>(null);
   const [risk, setRisk] = useState<RiskProfileDto | null>(null);
   const [invoices, setInvoices] = useState<CustomerInvoiceSummaryDto[]>([]);
@@ -31,6 +28,7 @@ export default function CustomerDetailPage({ customerId, onBack, onInvoiceSelect
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!customerId) return;
     let ignored = false;
     setLoading(true);
     Promise.all([
@@ -46,13 +44,14 @@ export default function CustomerDetailPage({ customerId, onBack, onInvoiceSelect
     return () => { ignored = true; };
   }, [customerId]);
 
+  if (!customerId) return <div className="page-error">Invalid customer ID</div>;
   if (loading) return <div className="page-loading">Loading…</div>;
   if (error) return <div className="page-error" role="alert">{error}</div>;
   if (!customer || !risk) return <></>;
 
   return (
     <div className="detail-page">
-      <button className="detail-back" onClick={onBack}>← Back to Customers</button>
+      <button className="detail-back" onClick={() => navigate('/customers')}>← Back to Customers</button>
 
       <div className="detail-header">
         <div>
@@ -109,7 +108,7 @@ export default function CustomerDetailPage({ customerId, onBack, onInvoiceSelect
               {invoices.length === 0 ? (
                 <tr><td colSpan={3}><div className="empty-detail">No invoices</div></td></tr>
               ) : invoices.map(inv => (
-                <tr key={inv.id} style={{ cursor: 'pointer' }} onClick={() => onInvoiceSelect(inv.id)}>
+                <tr key={inv.id} style={{ cursor: 'pointer' }} onClick={() => navigate(`/invoices/${inv.id}`)}>
                   <td>{formatCurrency(inv.amount)}</td>
                   <td>{inv.dueDate}</td>
                   <td>

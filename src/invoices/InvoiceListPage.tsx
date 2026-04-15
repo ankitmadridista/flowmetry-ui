@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getInvoices } from './invoices.api';
 import type { InvoiceFilter, InvoiceSummaryDto } from './invoices.api';
 import { FilterBar } from './FilterBar';
@@ -7,11 +8,8 @@ import { PaginationControls } from './PaginationControls';
 import CreateInvoiceModal from './CreateInvoiceModal';
 import './invoices.css';
 
-interface Props {
-  onInvoiceSelect?: (id: string) => void;
-}
-
-export default function InvoiceListPage({ onInvoiceSelect }: Props): React.JSX.Element {
+export default function InvoiceListPage(): React.JSX.Element {
+  const navigate = useNavigate();
   const [filter, setFilter] = useState<InvoiceFilter>({});
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(25);
@@ -67,7 +65,7 @@ export default function InvoiceListPage({ onInvoiceSelect }: Props): React.JSX.E
               sortBy={sortBy}
               sortDir={sortDir}
               onSortChange={onSortChange}
-              onRowClick={onInvoiceSelect}
+              onRowClick={id => navigate(`/invoices/${id}`)}
             />
           </div>
         )
@@ -85,7 +83,7 @@ export default function InvoiceListPage({ onInvoiceSelect }: Props): React.JSX.E
           onCreated={id => {
             setShowCreate(false);
             fetchInvoices();
-            onInvoiceSelect?.(id);
+            navigate(`/invoices/${id}`);
           }}
         />
       )}

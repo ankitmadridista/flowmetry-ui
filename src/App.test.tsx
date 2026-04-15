@@ -1,5 +1,7 @@
+/// <reference types="@testing-library/jest-dom" />
 import { render, screen } from '@testing-library/react';
 import { vi, describe, it, expect } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
 import App from './App';
 import { AuthProvider } from './auth/AuthContext';
 
@@ -28,9 +30,11 @@ vi.mock('./auth/AuthContext', async (importOriginal) => {
 
 function renderApp() {
   return render(
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <MemoryRouter>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </MemoryRouter>
   );
 }
 

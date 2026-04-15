@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getInvoiceDetails, getInvoiceReminders, sendInvoice, type InvoiceDetailsDto, type ReminderDto } from './invoiceDetail.api';
 import { formatCurrency } from '../utils/currency';
 import RecordPaymentModal from './RecordPaymentModal';
@@ -14,12 +15,9 @@ const reminderStatusClass: Record<string, string> = {
   Pending: 'status-sent', Sent: 'status-paid', Cancelled: 'status-cancelled',
 };
 
-interface Props {
-  invoiceId: string;
-  onBack: () => void;
-}
-
-export default function InvoiceDetailPage({ invoiceId, onBack }: Props): React.JSX.Element {
+export default function InvoiceDetailPage(): React.JSX.Element {
+  const { id: invoiceId } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [invoice, setInvoice] = useState<InvoiceDetailsDto | null>(null);
   const [reminders, setReminders] = useState<ReminderDto[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,6 +27,7 @@ export default function InvoiceDetailPage({ invoiceId, onBack }: Props): React.J
   const [sendError, setSendError] = useState<string | null>(null);
 
   function load() {
+    if (!invoiceId) return;
     setLoading(true);
     setError(null);
     Promise.all([getInvoiceDetails(invoiceId), getInvoiceReminders(invoiceId)])
@@ -37,7 +36,9 @@ export default function InvoiceDetailPage({ invoiceId, onBack }: Props): React.J
       .finally(() => setLoading(false));
   }
 
-  useEffect(() => { load(); }, [invoiceId]);
+  useEffect(() => { if (invoiceId) load(); }, [invoiceId]);
+
+  if (!invoiceId) return <div className="page-error">Invalid invoice ID</div>;
 
   if (loading) return <div className="page-loading">Loading…</div>;
   if (error) return <div className="page-error" role="alert">{error}</div>;
@@ -52,7 +53,7 @@ export default function InvoiceDetailPage({ invoiceId, onBack }: Props): React.J
     setSendError(null);
     setSending(true);
     try {
-      await sendInvoice(invoiceId);
+      await sendInvoice(invoiceId!);
       load();
     } catch (err) {
       setSendError(err instanceof Error ? err.message : 'Failed to send invoice');
@@ -63,7 +64,7 @@ export default function InvoiceDetailPage({ invoiceId, onBack }: Props): React.J
 
   return (
     <div className="detail-page">
-      <button className="detail-back" onClick={onBack}>← Back</button>
+      <button className="detail-back" onClick={() => navigate(-1)}>← Back</button>
 
       <div className="detail-header">
         <div>

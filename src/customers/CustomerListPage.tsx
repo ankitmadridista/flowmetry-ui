@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getCustomers, type CustomerSummaryDto } from './customers.api';
 import CreateCustomerModal from './CreateCustomerModal';
 import './customers.css';
-
-interface Props {
-  onSelect: (id: string) => void;
-}
 
 const riskClass: Record<string, string> = {
   Low: 'risk-low',
@@ -13,7 +10,8 @@ const riskClass: Record<string, string> = {
   High: 'risk-high',
 };
 
-export default function CustomerListPage({ onSelect }: Props): React.JSX.Element {
+export default function CustomerListPage(): React.JSX.Element {
+  const navigate = useNavigate();
   const [customers, setCustomers] = useState<CustomerSummaryDto[]>([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
@@ -70,7 +68,7 @@ export default function CustomerListPage({ onSelect }: Props): React.JSX.Element
             {filtered.length === 0 ? (
               <tr><td colSpan={3}><div className="empty-state">No customers found</div></td></tr>
             ) : filtered.map(c => (
-              <tr key={c.id} onClick={() => onSelect(c.id)}>
+              <tr key={c.id} onClick={() => navigate(`/customers/${c.id}`)}>
                 <td>{c.name}</td>
                 <td>{c.email}</td>
                 <td>
@@ -90,7 +88,7 @@ export default function CustomerListPage({ onSelect }: Props): React.JSX.Element
           onCreated={id => {
             setShowCreate(false);
             load();
-            onSelect(id);
+            navigate(`/customers/${id}`);
           }}
         />
       )}

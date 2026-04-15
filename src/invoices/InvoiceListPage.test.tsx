@@ -2,6 +2,7 @@
 import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { MemoryRouter } from 'react-router-dom';
 import InvoiceListPage from './InvoiceListPage';
 import type { PagedResult } from './invoices.api';
 
@@ -17,6 +18,10 @@ import { getInvoices } from './invoices.api';
 const mockGetInvoices = getInvoices as ReturnType<typeof vi.fn>;
 
 const emptyResult: PagedResult = { items: [], totalCount: 0, page: 0, pageSize: 25 };
+
+function renderPage() {
+  return render(<MemoryRouter><InvoiceListPage /></MemoryRouter>);
+}
 
 const sampleItems: PagedResult = {
   items: [
@@ -36,7 +41,7 @@ describe('InvoiceListPage', () => {
   it('fetches with default filter on mount (Req 2.1)', async () => {
     mockGetInvoices.mockResolvedValue(emptyResult);
 
-    render(<InvoiceListPage />);
+    renderPage();
 
     await waitFor(() => {
       expect(mockGetInvoices).toHaveBeenCalledWith(
@@ -49,7 +54,7 @@ describe('InvoiceListPage', () => {
     let resolve!: (v: PagedResult) => void;
     mockGetInvoices.mockReturnValue(new Promise<PagedResult>(r => { resolve = r; }));
 
-    render(<InvoiceListPage />);
+    renderPage();
 
     expect(screen.getByText('Loading…')).toBeInTheDocument();
 
@@ -60,7 +65,7 @@ describe('InvoiceListPage', () => {
   it('renders table rows on successful fetch (Req 2.3)', async () => {
     mockGetInvoices.mockResolvedValue(sampleItems);
 
-    render(<InvoiceListPage />);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getByText('INV-00001')).toBeInTheDocument();
@@ -71,7 +76,7 @@ describe('InvoiceListPage', () => {
   it('shows error message on fetch failure (Req 2.4)', async () => {
     mockGetInvoices.mockRejectedValue(new Error('Request failed with status 500'));
 
-    render(<InvoiceListPage />);
+    renderPage();
 
     await waitFor(() => {
       expect(screen.getByRole('alert')).toHaveTextContent('Request failed with status 500');
@@ -81,7 +86,7 @@ describe('InvoiceListPage', () => {
   it('filter change triggers new fetch and resets page to 0 (Req 2.5, 4.7)', async () => {
     mockGetInvoices.mockResolvedValue(sampleItems);
 
-    render(<InvoiceListPage />);
+    renderPage();
     await waitFor(() => expect(mockGetInvoices).toHaveBeenCalledTimes(1));
 
     // Change a field then submit to trigger onFilterChange with a new filter value
@@ -100,7 +105,7 @@ describe('InvoiceListPage', () => {
   it('sort change triggers new fetch and resets page to 0 (Req 2.5, 5.3)', async () => {
     mockGetInvoices.mockResolvedValue(sampleItems);
 
-    render(<InvoiceListPage />);
+    renderPage();
     await waitFor(() => expect(mockGetInvoices).toHaveBeenCalledTimes(1));
 
     await act(async () => {
@@ -118,7 +123,7 @@ describe('InvoiceListPage', () => {
   it('page size change triggers new fetch and resets page to 0 (Req 2.5, 6.6)', async () => {
     mockGetInvoices.mockResolvedValue(sampleItems);
 
-    render(<InvoiceListPage />);
+    renderPage();
     await waitFor(() => expect(mockGetInvoices).toHaveBeenCalledTimes(1));
 
     await act(async () => {
