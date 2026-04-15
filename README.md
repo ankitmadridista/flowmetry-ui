@@ -6,7 +6,7 @@ React + TypeScript frontend for the Flowmetry invoice management platform.
 
 - Node.js 18+
 - npm 9+
-- Flowmetry API running locally (see [flowmetry-app](../flowmetry-app/README.md))
+- Flowmetry API running locally (see [flowmetry-app](https://github.com/ankitmadridista/flowmetry-app/blob/main/README.md))
 
 ## Getting started
 
