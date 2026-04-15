@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 import type { AuthUser } from './auth.api';
 
 const TOKEN_KEY = 'flowmetry_token';
