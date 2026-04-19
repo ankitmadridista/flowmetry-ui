@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getInvoices } from './invoices.api';
 import type { InvoiceFilter, InvoiceSummaryDto } from './invoices.api';
@@ -6,6 +6,8 @@ import { FilterBar } from './FilterBar';
 import { InvoiceTable } from './InvoiceTable';
 import { PaginationControls } from './PaginationControls';
 import CreateInvoiceModal from './CreateInvoiceModal';
+import { usePermission } from '../auth/usePermissions';
+import { ObjId, OpId } from '../auth/permissions';
 import './invoices.css';
 
 export default function InvoiceListPage(): React.JSX.Element {
@@ -21,20 +23,29 @@ export default function InvoiceListPage(): React.JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
 
-  function fetchInvoices() {
-    let ignored = false;
-    setLoading(true);
-    setError(null);
-    getInvoices({ ...filter, page, pageSize, sortBy, sortDir })
-      .then(result => {
-        if (!ignored) { setItems(result.items); setTotalCount(result.totalCount); }
-      })
-      .catch(err => { if (!ignored) setError(err.message); })
-      .finally(() => { if (!ignored) setLoading(false); });
-    return () => { ignored = true; };
-  }
+  const canCreateInvoice = usePermission(ObjId.INVOICES, OpId.CREATE);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const triggerRefresh = useCallback(() => setRefreshKey(k => k + 1), []);
 
-  useEffect(fetchInvoices, [filter, page, pageSize, sortBy, sortDir]);
+  useEffect(() => {
+    let ignored = false;
+    async function fetchData() {
+      setLoading(true);
+      setError(null);
+      try {
+        const result = await getInvoices({ ...filter, page, pageSize, sortBy, sortDir });
+        if (!ignored) { setItems(result.items); setTotalCount(result.totalCount); }
+      } catch (err) {
+        if (!ignored) setError((err as Error).message);
+      } finally {
+        if (!ignored) setLoading(false);
+      }
+    }
+     
+    fetchData();
+    return () => { ignored = true; };
+   
+  }, [filter, page, pageSize, sortBy, sortDir, refreshKey]);
 
   function onFilterChange(f: InvoiceFilter) { setFilter(f); setPage(0); }
 
@@ -52,7 +63,9 @@ export default function InvoiceListPage(): React.JSX.Element {
     <div className="invoice-page">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
         <h1 style={{ margin: 0 }}>Invoices</h1>
-        <button className="btn-primary" onClick={() => setShowCreate(true)}>+ New Invoice</button>
+        {canCreateInvoice && (
+          <button className="btn-primary" onClick={() => setShowCreate(true)}>+ New Invoice</button>
+        )}
       </div>
       <FilterBar value={filter} onFilterChange={onFilterChange} />
       {error && <p className="error-state" role="alert">{error}</p>}
@@ -82,7 +95,7 @@ export default function InvoiceListPage(): React.JSX.Element {
           onClose={() => setShowCreate(false)}
           onCreated={id => {
             setShowCreate(false);
-            fetchInvoices();
+            triggerRefresh();
             navigate(`/invoices/${id}`);
           }}
         />

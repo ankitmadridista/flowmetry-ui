@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCustomers, type CustomerSummaryDto } from './customers.api';
 import CreateCustomerModal from './CreateCustomerModal';
+import { usePermission } from '../auth/usePermissions';
+import { ObjId, OpId } from '../auth/permissions';
 import './customers.css';
 
 const riskClass: Record<string, string> = {
@@ -18,15 +20,28 @@ export default function CustomerListPage(): React.JSX.Element {
   const [error, setError] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
 
-  function load() {
-    setLoading(true);
-    getCustomers()
-      .then(data => setCustomers(data))
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false));
-  }
+  const canCreateCustomer = usePermission(ObjId.CUSTOMERS, OpId.CREATE);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const load = useCallback(() => setRefreshKey(k => k + 1), []);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchData() {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await getCustomers();
+        if (!cancelled) setCustomers(data);
+      } catch (err) {
+        if (!cancelled) setError((err as Error).message);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    fetchData();
+    return () => { cancelled = true; };
+   
+  }, [refreshKey]);
 
   const filtered = search.trim()
     ? customers.filter(c =>
@@ -42,7 +57,9 @@ export default function CustomerListPage(): React.JSX.Element {
     <div className="customer-page">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
         <h1 style={{ margin: 0 }}>Customers</h1>
-        <button className="btn-primary" onClick={() => setShowCreate(true)}>+ New Customer</button>
+        {canCreateCustomer && (
+          <button className="btn-primary" onClick={() => setShowCreate(true)}>+ New Customer</button>
+        )}
       </div>
 
       <div style={{ marginBottom: '16px' }}>

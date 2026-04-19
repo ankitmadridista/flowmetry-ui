@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getInvoiceDetails, getInvoiceReminders, sendInvoice, type InvoiceDetailsDto, type ReminderDto } from './invoiceDetail.api';
 import { formatCurrency } from '../utils/currency';
@@ -26,17 +26,25 @@ export default function InvoiceDetailPage(): React.JSX.Element {
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
 
-  function load() {
+  const load = useCallback(async () => {
     if (!invoiceId) return;
     setLoading(true);
     setError(null);
-    Promise.all([getInvoiceDetails(invoiceId), getInvoiceReminders(invoiceId)])
-      .then(([inv, rem]) => { setInvoice(inv); setReminders(rem); })
-      .catch(err => setError(err.message))
-      .finally(() => setLoading(false));
-  }
+    try {
+      const [inv, rem] = await Promise.all([getInvoiceDetails(invoiceId), getInvoiceReminders(invoiceId)]);
+      setInvoice(inv);
+      setReminders(rem);
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  }, [invoiceId]);
 
-  useEffect(() => { if (invoiceId) load(); }, [invoiceId]);
+  useEffect(() => {
+     
+    load();
+  }, [load]);
 
   if (!invoiceId) return <div className="page-error">Invalid invoice ID</div>;
 
