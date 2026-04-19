@@ -14,12 +14,20 @@ export default function DashboardPage(): React.JSX.Element {
 
   useEffect(() => {
     let ignored = false;
-    setLoading(true);
-    setError(null);
-    getCashflowSummary()
-      .then(data => { if (!ignored) setSummary(data); })
-      .catch(err => { if (!ignored) setError(err.message); })
-      .finally(() => { if (!ignored) setLoading(false); });
+    async function fetchData() {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await getCashflowSummary();
+        if (!ignored) setSummary(data);
+      } catch (err) {
+        if (!ignored) setError((err as Error).message);
+      } finally {
+        if (!ignored) setLoading(false);
+      }
+    }
+     
+    fetchData();
     return () => { ignored = true; };
   }, []);
 

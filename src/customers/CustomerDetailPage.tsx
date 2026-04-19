@@ -30,17 +30,23 @@ export default function CustomerDetailPage(): React.JSX.Element {
   useEffect(() => {
     if (!customerId) return;
     let ignored = false;
-    setLoading(true);
-    Promise.all([
-      getCustomer(customerId),
-      getCustomerRiskProfile(customerId),
-      getCustomerInvoices(customerId),
-    ])
-      .then(([c, r, inv]) => {
+    async function fetchData() {
+      setLoading(true);
+      try {
+        const [c, r, inv] = await Promise.all([
+          getCustomer(customerId!),
+          getCustomerRiskProfile(customerId!),
+          getCustomerInvoices(customerId!),
+        ]);
         if (!ignored) { setCustomer(c); setRisk(r); setInvoices(inv); }
-      })
-      .catch(err => { if (!ignored) setError(err.message); })
-      .finally(() => { if (!ignored) setLoading(false); });
+      } catch (err) {
+        if (!ignored) setError((err as Error).message);
+      } finally {
+        if (!ignored) setLoading(false);
+      }
+    }
+     
+    fetchData();
     return () => { ignored = true; };
   }, [customerId]);
 

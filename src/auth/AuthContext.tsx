@@ -16,7 +16,9 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 // Module-level signOut reference so fetchWithAuth can call it without React context
+     
 let _signOut: (() => void) | null = null;
+// eslint-disable-next-line react-refresh/only-export-components
 export function getSignOut(): (() => void) | null { return _signOut; }
 
 function clearStorage() {
@@ -78,12 +80,14 @@ export function AuthProvider({ children }: { children: ReactNode }): React.JSX.E
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth(): AuthContextValue {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuth must be used within AuthProvider');
   return ctx;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function getStoredToken(): string | null {
   return localStorage.getItem(TOKEN_KEY);
 }
