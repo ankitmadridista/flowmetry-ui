@@ -1,5 +1,5 @@
 /// <reference types="@testing-library/jest-dom" />
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import App from './App';
@@ -11,6 +11,14 @@ vi.mock('./invoices/invoices.api', () => ({
 
 vi.mock('./dashboard/dashboard.api', () => ({
   getCashflowSummary: vi.fn().mockReturnValue(new Promise(() => {})),
+}));
+
+// Mock permissions API so all objects are enabled and all permissions are granted
+vi.mock('./auth/permissions.api', () => ({
+  getPermissions: vi.fn().mockResolvedValue({
+    securityObjectStatus: { 1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true },
+    permissions: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
+  }),
 }));
 
 // Mock auth so the app renders the main layout (not the login page)
@@ -39,16 +47,20 @@ function renderApp() {
 }
 
 describe('App', () => {
-  it('renders nav with all page links', () => {
+  it('renders nav with all page links', async () => {
     renderApp();
     expect(screen.getByText('Flowmetry')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Dashboard' })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Dashboard' })).toBeInTheDocument();
+    });
     expect(screen.getByRole('button', { name: 'Invoices' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Customers' })).toBeInTheDocument();
   });
 
-  it('shows Dashboard page by default', () => {
+  it('shows Dashboard page by default', async () => {
     renderApp();
-    expect(screen.getByRole('button', { name: 'Dashboard' })).toHaveClass('active');
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Dashboard' })).toHaveClass('active');
+    });
   });
 });

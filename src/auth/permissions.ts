@@ -5,6 +5,7 @@ export const ObjId = {
   CUSTOMERS: 4,
   PAYMENTS: 5,
   REPORTS: 6,
+  SECURITY: 7,
 } as const;
 
 export const OpId = {
@@ -37,4 +38,7 @@ export const PERMISSION_MAP: Record<number, { objId: number; operationId: number
   18: { objId: 6, operationId: 2 }, // Reports - Create
   19: { objId: 6, operationId: 3 }, // Reports - Edit
   20: { objId: 6, operationId: 4 }, // Reports - Delete
+  21: { objId: 7, operationId: 1 }, // Security - View
+  22: { objId: 7, operationId: 3 }, // Security - Edit
+  23: { objId: 7, operationId: 6 }, // Security - Manage
 };

@@ -1,0 +1,275 @@
+/* ── Security Admin Page ────────────────────────────────────── */
+.security-page {
+  padding: 32px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: var(--sans);
+  color: var(--text);
+}
+
+.security-page h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0 0 24px;
+  letter-spacing: -0.5px;
+}
+
+@media (max-width: 768px) {
+  .security-page {
+    padding: 20px 16px;
+  }
+  .security-page h1 {
+    font-size: 22px;
+  }
+}
+
+/* ── Tab Bar ────────────────────────────────────────────────── */
+.security-tab-bar {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.security-tab-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.security-tab-btn {
+  padding: 8px 18px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: -1px;
+  transition: color 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.security-tab-btn.active {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ── Card / Row ─────────────────────────────────────────────── */
+.security-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.security-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.security-row:last-child {
+  border-bottom: none;
+}
+
+.security-row.indent {
+  padding-left: 32px;
+}
+
+@media (max-width: 480px) {
+  .security-row {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px;
+  }
+  .security-row.indent {
+    padding-left: 24px;
+  }
+}
+
+.security-row-title {
+  flex: 1;
+  color: var(--text-h);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.security-row-title.parent {
+  font-weight: 500;
+}
+
+/* ── Role / User rows ───────────────────────────────────────── */
+.security-entity-row {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.security-entity-row:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 480px) {
+  .security-entity-row {
+    padding: 12px;
+  }
+}
+
+.security-entity-name {
+  font-weight: 600;
+  color: var(--text-h);
+  margin-bottom: 6px;
+}
+
+.security-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.security-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.security-tag-remove {
+  height: 16px;
+  padding: 0 4px;
+  background: none;
+  color: #b91c1c;
+  border: none;
+  border-radius: 3px;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  font-family: var(--sans);
+  display: inline-flex;
+  align-items: center;
+}
+
+.security-tag-remove:hover {
+  background: #fee2e2;
+}
+
+.security-add-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.security-select {
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text-h);
+  font-size: 13px;
+  font-family: var(--sans);
+  outline: none;
+  flex: 1;
+  min-width: 0;
+  max-width: 280px;
+}
+
+.security-select:focus {
+  border-color: var(--accent);
+}
+
+@media (max-width: 480px) {
+  .security-select {
+    max-width: 100%;
+    width: 100%;
+  }
+  .security-add-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .security-add-row .btn-primary {
+    width: 100%;
+  }
+}
+
+/* ── Badges ─────────────────────────────────────────────────── */
+.security-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.security-badge.enabled {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.security-badge.disabled {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+/* ── Row-level error ────────────────────────────────────────── */
+.security-row-error {
+  font-size: 12px;
+  color: #b91c1c;
+  margin: 4px 0 0;
+}
+
+/* ── Empty / Loading ────────────────────────────────────────── */
+.security-empty {
+  text-align: center;
+  padding: 40px;
+  color: var(--text);
+  opacity: 0.6;
+  font-size: 14px;
+}
+
+/* ── Access Denied ──────────────────────────────────────────── */
+.access-denied {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 12px;
+  text-align: center;
+  padding: 32px 16px;
+}
+
+.access-denied-icon {
+  font-size: 48px;
+}
+
+.access-denied h2 {
+  margin: 0;
+}
+
+.access-denied p {
+  color: var(--text);
+  opacity: 0.6;
+  margin: 0;
+}

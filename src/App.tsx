@@ -1,11 +1,12 @@
 import { Navigate, Route, Routes, useNavigate, useLocation } from 'react-router-dom';
-import type { ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import DashboardPage from './dashboard/DashboardPage';
 import InvoiceListPage from './invoices/InvoiceListPage';
 import InvoiceDetailPage from './invoices/InvoiceDetailPage';
 import CustomerListPage from './customers/CustomerListPage';
 import CustomerDetailPage from './customers/CustomerDetailPage';
 import LoginPage from './auth/LoginPage';
+import SecurityAdminPage from './security-admin/SecurityAdminPage';
 import { useAuth } from './auth/AuthContext';
 import { useTheme } from './utils/useTheme';
 import { PermissionProvider, usePermissionContext } from './auth/PermissionContext';
@@ -38,37 +39,91 @@ function NavBar() {
   const { theme, toggle } = useTheme();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const showDashboard = useObjectEnabled(ObjId.DASHBOARD) && usePermission(ObjId.DASHBOARD, OpId.VIEW);
   const showInvoices = useObjectEnabled(ObjId.INVOICES) && usePermission(ObjId.INVOICES, OpId.VIEW);
   const showCustomers = useObjectEnabled(ObjId.CUSTOMERS) && usePermission(ObjId.CUSTOMERS, OpId.VIEW);
+  const showSecurity = useObjectEnabled(ObjId.SECURITY) && usePermission(ObjId.SECURITY, OpId.VIEW);
+
+  // Close menu on route change
+  useEffect(() => { setMenuOpen(false); }, [pathname]);
 
   const isActive = (path: string) =>
     path === '/' ? pathname === '/' : pathname.startsWith(path);
 
+  function go(path: string) {
+    navigate(path);
+    setMenuOpen(false);
+  }
+
   return (
     <nav className="app-nav">
-      <span className="app-nav-brand" style={{ cursor: 'pointer' }} onClick={() => navigate('/')}>
+      {/* ── Brand ── */}
+      <span className="app-nav-brand" style={{ cursor: 'pointer' }} onClick={() => go('/')}>
         Flowmetry
       </span>
-      {showDashboard && (
-        <button className={`nav-link${isActive('/') && !isActive('/invoices') && !isActive('/customers') ? ' active' : ''}`} onClick={() => navigate('/')}>Dashboard</button>
-      )}
-      {showInvoices && (
-        <button className={`nav-link${isActive('/invoices') ? ' active' : ''}`} onClick={() => navigate('/invoices')}>Invoices</button>
-      )}
-      {showCustomers && (
-        <button className={`nav-link${isActive('/customers') ? ' active' : ''}`} onClick={() => navigate('/customers')}>Customers</button>
-      )}
-      <button className="nav-link" onClick={toggle} style={{ marginLeft: 'auto' }} aria-label="Toggle theme">
-        {theme === 'dark' ? '☀️' : '🌙'}
-      </button>
-      {user && (
-        <span style={{ fontSize: '13px', color: 'var(--text)', opacity: 0.7, marginLeft: '8px' }}>
-          {user.displayName}
+
+      {/* ── Desktop links ── */}
+      <div className="nav-links-desktop">
+        {showDashboard && (
+          <button className={`nav-link${isActive('/') && !isActive('/invoices') && !isActive('/customers') && !isActive('/security') ? ' active' : ''}`} onClick={() => go('/')}>Dashboard</button>
+        )}
+        {showInvoices && (
+          <button className={`nav-link${isActive('/invoices') ? ' active' : ''}`} onClick={() => go('/invoices')}>Invoices</button>
+        )}
+        {showCustomers && (
+          <button className={`nav-link${isActive('/customers') ? ' active' : ''}`} onClick={() => go('/customers')}>Customers</button>
+        )}
+        {showSecurity && (
+          <button className={`nav-link${isActive('/security') ? ' active' : ''}`} onClick={() => go('/security')}>Security</button>
+        )}
+      </div>
+
+      {/* ── Right side ── */}
+      <div className="nav-right">
+        <button className="nav-link" onClick={toggle} aria-label="Toggle theme">
+          {theme === 'dark' ? '☀️' : '🌙'}
+        </button>
+        <span className="nav-user-name">
+          {user?.displayName}
         </span>
+        <button className="nav-link" onClick={signOut}>Sign out</button>
+      </div>
+
+      {/* ── Hamburger (mobile only) ── */}
+      <button
+        className="nav-hamburger"
+        onClick={() => setMenuOpen(o => !o)}
+        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+        aria-expanded={menuOpen}
+      >
+        <span className={`nav-hamburger-icon${menuOpen ? ' open' : ''}`} />
+      </button>
+
+      {/* ── Mobile dropdown ── */}
+      {menuOpen && (
+        <div className="nav-mobile-menu">
+          {showDashboard && (
+            <button className={`nav-mobile-link${isActive('/') && !isActive('/invoices') && !isActive('/customers') && !isActive('/security') ? ' active' : ''}`} onClick={() => go('/')}>Dashboard</button>
+          )}
+          {showInvoices && (
+            <button className={`nav-mobile-link${isActive('/invoices') ? ' active' : ''}`} onClick={() => go('/invoices')}>Invoices</button>
+          )}
+          {showCustomers && (
+            <button className={`nav-mobile-link${isActive('/customers') ? ' active' : ''}`} onClick={() => go('/customers')}>Customers</button>
+          )}
+          {showSecurity && (
+            <button className={`nav-mobile-link${isActive('/security') ? ' active' : ''}`} onClick={() => go('/security')}>Security</button>
+          )}
+          <div className="nav-mobile-divider" />
+          <button className="nav-mobile-link" onClick={toggle}>
+            {theme === 'dark' ? '☀️ Light mode' : '🌙 Dark mode'}
+          </button>
+          {user && <span className="nav-mobile-user">{user.displayName}</span>}
+          <button className="nav-mobile-link nav-mobile-signout" onClick={() => { signOut(); setMenuOpen(false); }}>Sign out</button>
+        </div>
       )}
-      <button className="nav-link" onClick={signOut}>Sign out</button>
     </nav>
   );
 }
@@ -104,6 +159,11 @@ function ProtectedLayout() {
         <Route path="/customers/:id" element={
           <PermissionRoute objId={ObjId.CUSTOMERS}>
             <CustomerDetailPage />
+          </PermissionRoute>
+        } />
+        <Route path="/security" element={
+          <PermissionRoute objId={ObjId.SECURITY}>
+            <SecurityAdminPage />
           </PermissionRoute>
         } />
         <Route path="*" element={<Navigate to="/" replace />} />
