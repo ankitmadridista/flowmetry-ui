@@ -4,7 +4,7 @@ import {
   getCustomer, getCustomerRiskProfile, getCustomerInvoices,
   type CustomerSummaryDto, type RiskProfileDto, type CustomerInvoiceSummaryDto,
 } from './customers.api';
-import { formatCurrency } from '../utils/currency';
+import { formatCurrency } from '../../utils/currency';
 import './customers.css';
 
 const riskClass: Record<string, string> = {

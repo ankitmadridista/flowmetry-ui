@@ -5,23 +5,23 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
-import { useState, useEffect, type ReactNode } from "react";
-import DashboardPage from "./dashboard/DashboardPage";
-import InvoiceListPage from "./invoices/InvoiceListPage";
-import InvoiceDetailPage from "./invoices/InvoiceDetailPage";
-import CustomerListPage from "./customers/CustomerListPage";
-import CustomerDetailPage from "./customers/CustomerDetailPage";
-import LoginPage from "./auth/LoginPage";
-import SecurityAdminPage from "./security-admin/SecurityAdminPage";
-import { useAuth } from "./auth/AuthContext";
+import { useState, type ReactNode } from "react";
+import DashboardPage from "./features/dashboard/DashboardPage";
+import InvoiceListPage from "./features/invoices/InvoiceListPage";
+import InvoiceDetailPage from "./features/invoices/InvoiceDetailPage";
+import CustomerListPage from "./features/customers/CustomerListPage";
+import CustomerDetailPage from "./features/customers/CustomerDetailPage";
+import LoginPage from "./features/auth/LoginPage";
+import SecurityAdminPage from "./features/security-admin/SecurityAdminPage";
+import { useAuth } from "./features/auth/AuthContext";
 import { useTheme } from "./utils/useTheme";
 import {
   PermissionProvider,
   usePermissionContext,
-} from "./auth/PermissionContext";
-import { useObjectEnabled, usePermission } from "./auth/usePermissions";
-import { ObjId, OpId } from "./auth/permissions";
-import "./dashboard/dashboard.css";
+} from "./features/auth/PermissionContext";
+import { useObjectEnabled, usePermission } from "./features/auth/usePermissions";
+import { ObjId, OpId } from "./features/auth/permissions";
+import "./features/dashboard/dashboard.css";
 
 // 1. Import the new Landing Page
 import LandingPage from "./pages/LandingPage";

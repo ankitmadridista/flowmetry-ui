@@ -1,5 +1,5 @@
 import type { InvoiceSummaryDto } from './invoices.api';
-import { formatCurrency } from '../utils/currency';
+import { formatCurrency } from '../../utils/currency';
 
 interface InvoiceTableProps {
   items: InvoiceSummaryDto[];
