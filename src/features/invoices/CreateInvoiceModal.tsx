@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { createInvoice } from './invoiceDetail.api';
 import { getCustomers, type CustomerSummaryDto } from '../customers/customers.api';
-import DatePicker from '../components/DatePicker';
+import DatePicker from '../../components/DatePicker';
 
 interface Props {
   onClose: () => void;

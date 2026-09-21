@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { recordPayment } from './invoiceDetail.api';
-import { formatCurrency } from '../utils/currency';
+import { formatCurrency } from '../../utils/currency';
 
 interface Props {
   invoiceId: string;

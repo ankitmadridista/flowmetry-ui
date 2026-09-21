@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getCashflowSummary, type CashflowSummary } from './dashboard.api';
-import { formatCurrency } from '../utils/currency';
+import { formatCurrency } from '../../utils/currency';
 import './dashboard.css';
 
 function fmt(value: number): string {

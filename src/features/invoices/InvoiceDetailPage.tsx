@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getInvoiceDetails, getInvoiceReminders, sendInvoice, type InvoiceDetailsDto, type ReminderDto } from './invoiceDetail.api';
-import { formatCurrency } from '../utils/currency';
+import { formatCurrency } from '../../utils/currency';
 import RecordPaymentModal from './RecordPaymentModal';
 import '../customers/customers.css';
 import './invoices.css';
