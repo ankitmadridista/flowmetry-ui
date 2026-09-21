@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import BaseNavbar from "./BaseNavbar";
+import Navbar from "./Navbar";
 
 export default function PublicNavbar() {
   const navigate = useNavigate();
@@ -61,7 +61,7 @@ export default function PublicNavbar() {
   );
 
   return (
-    <BaseNavbar
+    <Navbar
       navLinks={links}
       actionButtons={actions}
       mobileMenuContent={mobileContent}

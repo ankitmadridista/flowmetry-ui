@@ -5,7 +5,8 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
-import { useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
+
 import DashboardPage from "./features/dashboard/DashboardPage";
 import InvoiceListPage from "./features/invoices/InvoiceListPage";
 import InvoiceDetailPage from "./features/invoices/InvoiceDetailPage";
@@ -14,36 +15,36 @@ import CustomerDetailPage from "./features/customers/CustomerDetailPage";
 import LoginPage from "./features/auth/LoginPage";
 import SecurityAdminPage from "./features/security-admin/SecurityAdminPage";
 import { useAuth } from "./features/auth/AuthContext";
-import { useTheme } from "./utils/useTheme";
 import {
   PermissionProvider,
   usePermissionContext,
 } from "./features/auth/PermissionContext";
-import { useObjectEnabled, usePermission } from "./features/auth/usePermissions";
+import {
+  useObjectEnabled,
+  usePermission,
+} from "./features/auth/usePermissions";
 import { ObjId, OpId } from "./features/auth/permissions";
 import "./features/dashboard/dashboard.css";
+
 import LandingPage from "./pages/LandingPage";
+import Footer from "./shared/components/Footer";
+import Navbar from "./shared/components/Navbar";
 
 function AccessDenied() {
   const navigate = useNavigate();
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "60vh",
-        gap: "12px",
-        textAlign: "center",
-      }}
-    >
-      <span style={{ fontSize: "48px" }}>🔒</span>
-      <h2 style={{ margin: 0 }}>Access Restricted</h2>
-      <p style={{ color: "var(--text)", opacity: 0.6, margin: 0 }}>
+    <div className="flex flex-col items-center justify-center h-[60vh] gap-3 text-center">
+      <span className="text-5xl">🔒</span>
+      <h2 className="text-heading font-heading font-semibold m-0 text-2xl">
+        Access Restricted
+      </h2>
+      <p className="text-foreground/60 m-0">
         You don't have permission to view this page.
       </p>
-      <button className="btn-primary" onClick={() => navigate(-1)}>
+      <button
+        className="px-4 py-2 mt-2 font-medium bg-accent text-white rounded-md hover:bg-accent/90 transition-colors shadow-theme"
+        onClick={() => navigate(-1)}
+      >
         Go Back
       </button>
     </div>
@@ -59,27 +60,24 @@ function PermissionRoute({
 }) {
   const { loading } = usePermissionContext();
   const canView = usePermission(objId, OpId.VIEW);
+
   if (loading) return null;
   if (!canView) return <AccessDenied />;
   return <>{children}</>;
 }
 
-function NavBar() {
+// Private Navbar built on top of the generic BaseNavbar
+function AppNavbar() {
   const { user, signOut } = useAuth();
-  const { theme, toggle } = useTheme();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const [menuOpen, setMenuOpen] = useState(false);
 
   const isDashboardEnabled = useObjectEnabled(ObjId.DASHBOARD);
   const canViewDashboard = usePermission(ObjId.DASHBOARD, OpId.VIEW);
-
   const isInvoicesEnabled = useObjectEnabled(ObjId.INVOICES);
   const canViewInvoices = usePermission(ObjId.INVOICES, OpId.VIEW);
-
   const isCustomersEnabled = useObjectEnabled(ObjId.CUSTOMERS);
   const canViewCustomers = usePermission(ObjId.CUSTOMERS, OpId.VIEW);
-
   const isSecurityEnabled = useObjectEnabled(ObjId.SECURITY);
   const canViewSecurity = usePermission(ObjId.SECURITY, OpId.VIEW);
 
@@ -88,200 +86,148 @@ function NavBar() {
   const showCustomers = isCustomersEnabled && canViewCustomers;
   const showSecurity = isSecurityEnabled && canViewSecurity;
 
-  const [prevPathname, setPrevPathname] = useState(pathname);
-
-  if (prevPathname !== pathname) {
-    setPrevPathname(pathname);
-    setMenuOpen(false);
-  }
-
   const isActive = (path: string) => pathname.startsWith(path);
 
-  function go(path: string) {
-    navigate(path);
-    setMenuOpen(false);
-  }
+  const navLinkClass = (path: string) =>
+    `font-medium transition-colors ${isActive(path) ? "text-accent" : "text-foreground hover:text-heading"}`;
+
+  const links = (
+    <>
+      {showDashboard && (
+        <button
+          className={navLinkClass("/dashboard")}
+          onClick={() => navigate("/dashboard")}
+        >
+          Dashboard
+        </button>
+      )}
+      {showInvoices && (
+        <button
+          className={navLinkClass("/invoices")}
+          onClick={() => navigate("/invoices")}
+        >
+          Invoices
+        </button>
+      )}
+      {showCustomers && (
+        <button
+          className={navLinkClass("/customers")}
+          onClick={() => navigate("/customers")}
+        >
+          Customers
+        </button>
+      )}
+      {showSecurity && (
+        <button
+          className={navLinkClass("/security")}
+          onClick={() => navigate("/security")}
+        >
+          Security
+        </button>
+      )}
+    </>
+  );
+
+  const actions = (
+    <>
+      <span className="text-sm font-medium text-foreground hidden sm:block">
+        {user?.displayName}
+      </span>
+      <button
+        className="px-4 py-2 font-medium border border-border text-foreground rounded-md hover:bg-code transition-colors"
+        onClick={signOut}
+      >
+        Sign out
+      </button>
+    </>
+  );
+
+  const mobileContent = (
+    <>
+      {links}
+      <hr className="border-border my-2" />
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-medium text-foreground px-2">
+          {user?.displayName}
+        </span>
+        {actions}
+      </div>
+    </>
+  );
 
   return (
-    <nav className="app-nav">
-      {/* 2. Updated Brand click to go to /dashboard instead of / */}
-      <span
-        className="app-nav-brand"
-        style={{ cursor: "pointer" }}
-        onClick={() => go("/dashboard")}
-      >
-        Flowmetry
-      </span>
-
-      <div className="nav-links-desktop">
-        {showDashboard && (
-          // 3. Cleaned up active state logic since dashboard is now cleanly at /dashboard
-          <button
-            className={`nav-link${isActive("/dashboard") ? " active" : ""}`}
-            onClick={() => go("/dashboard")}
-          >
-            Dashboard
-          </button>
-        )}
-        {showInvoices && (
-          <button
-            className={`nav-link${isActive("/invoices") ? " active" : ""}`}
-            onClick={() => go("/invoices")}
-          >
-            Invoices
-          </button>
-        )}
-        {showCustomers && (
-          <button
-            className={`nav-link${isActive("/customers") ? " active" : ""}`}
-            onClick={() => go("/customers")}
-          >
-            Customers
-          </button>
-        )}
-        {showSecurity && (
-          <button
-            className={`nav-link${isActive("/security") ? " active" : ""}`}
-            onClick={() => go("/security")}
-          >
-            Security
-          </button>
-        )}
-      </div>
-
-      <div className="nav-right">
-        <button className="nav-link" onClick={toggle} aria-label="Toggle theme">
-          {theme === "dark" ? "☀️" : "🌙"}
-        </button>
-        <span className="nav-user-name">{user?.displayName}</span>
-        <button className="nav-link" onClick={signOut}>
-          Sign out
-        </button>
-      </div>
-
-      <button
-        className="nav-hamburger"
-        onClick={() => setMenuOpen((o) => !o)}
-        aria-label={menuOpen ? "Close menu" : "Open menu"}
-        aria-expanded={menuOpen}
-      >
-        <span className={`nav-hamburger-icon${menuOpen ? " open" : ""}`} />
-      </button>
-
-      {menuOpen && (
-        <div className="nav-mobile-menu">
-          {showDashboard && (
-            <button
-              className={`nav-mobile-link${isActive("/dashboard") ? " active" : ""}`}
-              onClick={() => go("/dashboard")}
-            >
-              Dashboard
-            </button>
-          )}
-          {showInvoices && (
-            <button
-              className={`nav-mobile-link${isActive("/invoices") ? " active" : ""}`}
-              onClick={() => go("/invoices")}
-            >
-              Invoices
-            </button>
-          )}
-          {showCustomers && (
-            <button
-              className={`nav-mobile-link${isActive("/customers") ? " active" : ""}`}
-              onClick={() => go("/customers")}
-            >
-              Customers
-            </button>
-          )}
-          {showSecurity && (
-            <button
-              className={`nav-mobile-link${isActive("/security") ? " active" : ""}`}
-              onClick={() => go("/security")}
-            >
-              Security
-            </button>
-          )}
-          <div className="nav-mobile-divider" />
-          <button className="nav-mobile-link" onClick={toggle}>
-            {theme === "dark" ? "☀️ Light mode" : "🌙 Dark mode"}
-          </button>
-          {user && <span className="nav-mobile-user">{user.displayName}</span>}
-          <button
-            className="nav-mobile-link nav-mobile-signout"
-            onClick={() => {
-              signOut();
-              setMenuOpen(false);
-            }}
-          >
-            Sign out
-          </button>
-        </div>
-      )}
-    </nav>
+    <Navbar
+      navLinks={links}
+      actionButtons={actions}
+      mobileMenuContent={mobileContent}
+    />
   );
 }
 
+// Wrapper for the authenticated portion of the app
 function ProtectedLayout() {
   const { isAuthenticated } = useAuth();
   if (!isAuthenticated) return <Navigate to="/login" replace />;
 
   return (
     <PermissionProvider>
-      <NavBar />
-      <Routes>
-        {/* 4. Moved Dashboard from / to /dashboard */}
-        <Route
-          path="/dashboard"
-          element={
-            <PermissionRoute objId={ObjId.DASHBOARD}>
-              <DashboardPage />
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/invoices"
-          element={
-            <PermissionRoute objId={ObjId.INVOICES}>
-              <InvoiceListPage />
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/invoices/:id"
-          element={
-            <PermissionRoute objId={ObjId.INVOICES}>
-              <InvoiceDetailPage />
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/customers"
-          element={
-            <PermissionRoute objId={ObjId.CUSTOMERS}>
-              <CustomerListPage />
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/customers/:id"
-          element={
-            <PermissionRoute objId={ObjId.CUSTOMERS}>
-              <CustomerDetailPage />
-            </PermissionRoute>
-          }
-        />
-        <Route
-          path="/security"
-          element={
-            <PermissionRoute objId={ObjId.SECURITY}>
-              <SecurityAdminPage />
-            </PermissionRoute>
-          }
-        />
-        {/* 5. Fallback for protected routes goes to dashboard */}
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
-      </Routes>
+      <div className="min-h-screen flex flex-col bg-background text-foreground">
+        <AppNavbar />
+        <main className="grow">
+          <Routes>
+            <Route
+              path="/dashboard"
+              element={
+                <PermissionRoute objId={ObjId.DASHBOARD}>
+                  <DashboardPage />
+                </PermissionRoute>
+              }
+            />
+            <Route
+              path="/invoices"
+              element={
+                <PermissionRoute objId={ObjId.INVOICES}>
+                  <InvoiceListPage />
+                </PermissionRoute>
+              }
+            />
+            <Route
+              path="/invoices/:id"
+              element={
+                <PermissionRoute objId={ObjId.INVOICES}>
+                  <InvoiceDetailPage />
+                </PermissionRoute>
+              }
+            />
+            <Route
+              path="/customers"
+              element={
+                <PermissionRoute objId={ObjId.CUSTOMERS}>
+                  <CustomerListPage />
+                </PermissionRoute>
+              }
+            />
+            <Route
+              path="/customers/:id"
+              element={
+                <PermissionRoute objId={ObjId.CUSTOMERS}>
+                  <CustomerDetailPage />
+                </PermissionRoute>
+              }
+            />
+            <Route
+              path="/security"
+              element={
+                <PermissionRoute objId={ObjId.SECURITY}>
+                  <SecurityAdminPage />
+                </PermissionRoute>
+              }
+            />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
     </PermissionProvider>
   );
 }
@@ -291,7 +237,6 @@ export default function App(): React.JSX.Element {
 
   return (
     <Routes>
-      {/* 6. Root route is now the Landing Page (or redirects to dashboard if logged in) */}
       <Route
         path="/"
         element={
@@ -302,14 +247,12 @@ export default function App(): React.JSX.Element {
           )
         }
       />
-
       <Route
         path="/login"
         element={
           isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />
         }
       />
-
       <Route path="/*" element={<ProtectedLayout />} />
     </Routes>
   );
