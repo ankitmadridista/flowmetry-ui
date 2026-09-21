@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiClient } from "../api";
 import PublicNavbar from "../shared/components/PublicNavbar";
+import Roadmap from "../features/roadmap/Roadmap";
+import Footer from "../shared/components/Footer";
 
 export default function LandingPage() {
   const navigate = useNavigate();
@@ -17,8 +19,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-accent selection:text-white">
-      {/* 2. Use the new shared component here */}
+    <div className="min-h-screen bg-background text-foreground selection:bg-accent selection:text-white pb-20">
       <PublicNavbar />
 
       {/* Hero Section */}
@@ -39,20 +40,24 @@ export default function LandingPage() {
             Get Started Free
           </button>
         </div>
+      </main>
 
-        {/* Roadmap Placeholder */}
-        <div className="mt-32 w-full">
+      {/* Roadmap Section */}
+      <section className="px-4 max-w-6xl mx-auto w-full">
+        <div className="text-center mb-12">
           <h2 className="text-3xl font-heading font-semibold text-heading mb-4">
             Product Roadmap
           </h2>
-          <p className="text-foreground/80 mb-8">
+          <p className="text-foreground/80">
             See what we've built and what's coming next.
           </p>
-          <div className="p-8 border border-border rounded-lg bg-code/50 border-dashed text-center">
-            Roadmap Component will go here in the next step
-          </div>
         </div>
-      </main>
+
+        {/* Render the Roadmap Component here */}
+        <Roadmap />
+      </section>
+
+      <Footer />
     </div>
   );
 }

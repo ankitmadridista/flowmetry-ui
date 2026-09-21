@@ -22,8 +22,6 @@ import {
 import { useObjectEnabled, usePermission } from "./features/auth/usePermissions";
 import { ObjId, OpId } from "./features/auth/permissions";
 import "./features/dashboard/dashboard.css";
-
-// 1. Import the new Landing Page
 import LandingPage from "./pages/LandingPage";
 
 function AccessDenied() {
