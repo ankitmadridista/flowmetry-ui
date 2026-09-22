@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { useAuth } from './AuthContext';
-import { getPermissions } from './api/permissions.api';
+import { getPermissions } from '../api/permissions.api';
 
 export interface PermissionContextValue {
   securityObjectStatus: Record<number, boolean>;

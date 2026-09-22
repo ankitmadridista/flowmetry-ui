@@ -11,10 +11,10 @@ const InvoiceDetailPage = lazy(
   () => import("../features/invoices/pages/InvoiceDetailPage"),
 );
 const CustomerListPage = lazy(
-  () => import("../features/customers/CustomerListPage"),
+  () => import("../features/customers/pages/CustomerListPage"),
 );
 const CustomerDetailPage = lazy(
-  () => import("../features/customers/CustomerDetailPage"),
+  () => import("../features/customers/pages/CustomerDetailPage"),
 );
 const SecurityAdminPage = lazy(
   () => import("../features/security-admin/SecurityAdminPage"),

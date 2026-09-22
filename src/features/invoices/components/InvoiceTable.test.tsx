@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, it, expect, vi } from "vitest";
 import { InvoiceTable } from "./InvoiceTable";
-import { InvoiceSummaryDto } from "../api/invoices.api";
+import type { InvoiceSummaryDto } from "../api/invoices.api";
 
 const sampleItems: InvoiceSummaryDto[] = [
   {
