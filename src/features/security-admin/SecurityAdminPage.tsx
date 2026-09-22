@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useObjectEnabled, usePermission } from '../auth/usePermissions';
+import { useObjectEnabled, usePermission } from '../auth/hooks/usePermissions';
 import { ObjId, OpId, PERMISSION_MAP } from '../auth/permissions';
 import {
   getSecurityObjects,
@@ -14,7 +14,6 @@ import {
 } from './security-admin.api';
 import type { SecurityObjectDto, RoleWithPermissionsDto, UserWithRolesDto } from './security-admin.api';
 import './security-admin.css';
-import '../invoices/invoices.css';
 
 // ── AccessDenied ──────────────────────────────────────────────────────────────
 function AccessDenied() {
@@ -356,7 +355,9 @@ type Tab = 'objects' | 'roles' | 'users';
 export default function SecurityAdminPage(): React.JSX.Element {
   const isEnabled = useObjectEnabled(ObjId.SECURITY);
   const canView   = usePermission(ObjId.SECURITY, OpId.VIEW);
-  const canMutate = usePermission(ObjId.SECURITY, OpId.EDIT) || usePermission(ObjId.SECURITY, OpId.MANAGE);
+  const canEdit = usePermission(ObjId.SECURITY, OpId.EDIT);
+  const canManage = usePermission(ObjId.SECURITY, OpId.MANAGE);
+  const canMutate = canEdit || canManage;
 
   const [activeTab, setActiveTab] = useState<Tab>('objects');
 

@@ -1,6 +1,11 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
+import { cleanup } from '@testing-library/react';
+import { afterEach } from 'vitest';
 
-// jsdom doesn't implement matchMedia — provide a minimal stub
+afterEach(() => {
+  cleanup();
+});
+
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: (query: string) => ({

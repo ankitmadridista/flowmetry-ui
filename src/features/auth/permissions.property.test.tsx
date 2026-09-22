@@ -2,8 +2,8 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { describe, it, vi, afterEach } from 'vitest';
 import * as fc from 'fast-check';
-import { useObjectEnabled, usePermission } from './usePermissions';
 import { PERMISSION_MAP } from './permissions';
+import { useObjectEnabled, usePermission } from './hooks/usePermissions';
 
 // ---------------------------------------------------------------------------
 // Mock PermissionContext — mutable object controls what hooks read

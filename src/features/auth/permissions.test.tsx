@@ -2,7 +2,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-import { useObjectEnabled, usePermission } from './usePermissions';
 import { ObjId, OpId } from './permissions';
 
 // ---------------------------------------------------------------------------
@@ -35,8 +34,8 @@ vi.mock('../auth/AuthContext', () => ({
 // ---------------------------------------------------------------------------
 // Mock invoices.api so InvoiceListPage doesn't make real network calls
 // ---------------------------------------------------------------------------
-vi.mock('../invoices/invoices.api', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../invoices/invoices.api')>();
+vi.mock('../invoices/api/invoices.api', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../invoices/api/invoices.api')>();
   return {
     ...actual,
     getInvoices: vi.fn().mockResolvedValue({ items: [], totalCount: 0, page: 0, pageSize: 25 }),
@@ -133,7 +132,8 @@ describe('useObjectEnabled hook', () => {
 // ---------------------------------------------------------------------------
 // Test Group 3: InvoiceListPage — action button visibility (Req 9.1)
 // ---------------------------------------------------------------------------
-import InvoiceListPage from '../invoices/InvoiceListPage';
+import InvoiceListPage from '../invoices/pages/InvoiceListPage';
+import { useObjectEnabled, usePermission } from './hooks/usePermissions';
 
 describe('InvoiceListPage — action button visibility', () => {
   beforeEach(() => {
