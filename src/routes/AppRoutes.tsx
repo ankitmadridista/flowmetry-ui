@@ -5,10 +5,10 @@ import PermissionRoute from "../features/auth/components/PermissionRoute";
 
 const DashboardPage = lazy(() => import("../features/dashboard/DashboardPage"));
 const InvoiceListPage = lazy(
-  () => import("../features/invoices/InvoiceListPage"),
+  () => import("../features/invoices/pages/InvoiceListPage"),
 );
 const InvoiceDetailPage = lazy(
-  () => import("../features/invoices/InvoiceDetailPage"),
+  () => import("../features/invoices/pages/InvoiceDetailPage"),
 );
 const CustomerListPage = lazy(
   () => import("../features/customers/CustomerListPage"),
