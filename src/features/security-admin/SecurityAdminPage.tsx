@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useObjectEnabled, usePermission } from '../auth/usePermissions';
+import { useObjectEnabled, usePermission } from '../auth/hooks/usePermissions';
 import { ObjId, OpId, PERMISSION_MAP } from '../auth/permissions';
 import {
   getSecurityObjects,

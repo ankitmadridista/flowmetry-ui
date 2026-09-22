@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
-import type { AuthUser } from './auth.api';
-import { isTokenExpired } from './tokenUtils';
-
+import type { AuthUser } from '../api/auth.api';
+import { isTokenExpired } from '../utils/tokenUtils';
 const TOKEN_KEY = 'flowmetry_token';
 const USER_KEY = 'flowmetry_user';
 

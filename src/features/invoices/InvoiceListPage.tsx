@@ -6,7 +6,7 @@ import { FilterBar } from './FilterBar';
 import { InvoiceTable } from './InvoiceTable';
 import { PaginationControls } from './PaginationControls';
 import CreateInvoiceModal from './CreateInvoiceModal';
-import { usePermission } from '../auth/usePermissions';
+import { usePermission } from '../auth/hooks/usePermissions';
 import { ObjId, OpId } from '../auth/permissions';
 import './invoices.css';
 

@@ -1,5 +1,6 @@
-import { usePermissionContext } from './PermissionContext';
-import { PERMISSION_MAP } from './permissions';
+
+import { usePermissionContext } from '../contexts/PermissionContext';
+import { PERMISSION_MAP } from '../permissions';
 
 export function useObjectEnabled(objId: number): boolean {
   const { securityObjectStatus } = usePermissionContext();

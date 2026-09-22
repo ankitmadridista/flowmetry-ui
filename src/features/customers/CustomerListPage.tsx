@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCustomers, type CustomerSummaryDto } from './customers.api';
 import CreateCustomerModal from './CreateCustomerModal';
-import { usePermission } from '../auth/usePermissions';
+import { usePermission } from '../auth/hooks/usePermissions';
 import { ObjId, OpId } from '../auth/permissions';
 import './customers.css';
 

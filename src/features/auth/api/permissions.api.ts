@@ -1,4 +1,4 @@
-import { fetchWithAuth } from './fetchWithAuth';
+import { fetchWithAuth } from '../utils/fetchWithAuth';
 
 const API_BASE = import.meta.env.VITE_API_URL ?? '';
 
