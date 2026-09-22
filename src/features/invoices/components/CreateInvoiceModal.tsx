@@ -4,7 +4,7 @@ import {
   getCustomers,
   type CustomerSummaryDto,
 } from "../../customers/api/customers.api";
-import DatePicker from "../../../components/DatePicker";
+import DatePicker from "../../../shared/components/DatePicker";
 
 interface Props {
   onClose: () => void;

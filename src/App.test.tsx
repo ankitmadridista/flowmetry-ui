@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { vi, describe, it, expect } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import App from './App';
-import { AuthProvider } from './auth/AuthContext';
+import { AuthProvider } from './features/auth/contexts/AuthContext';
 
 vi.mock('./invoices/invoices.api', () => ({
   getInvoices: vi.fn().mockReturnValue(new Promise(() => {})),
@@ -22,8 +22,8 @@ vi.mock('./auth/permissions.api', () => ({
 }));
 
 // Mock auth so the app renders the main layout (not the login page)
-vi.mock('./auth/AuthContext', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('./auth/AuthContext')>();
+vi.mock('./features/auth/contexts/AuthContext', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('./features/auth/contexts/AuthContext')>();
   return {
     ...actual,
     useAuth: () => ({

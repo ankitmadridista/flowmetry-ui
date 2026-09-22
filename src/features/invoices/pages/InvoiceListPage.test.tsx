@@ -4,17 +4,16 @@ import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import InvoiceListPage from './InvoiceListPage';
-import type { PagedResult } from './invoices.api';
 
-vi.mock('./invoices.api', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('./invoices.api')>();
+vi.mock('../api/invoices.api', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../api/invoices.api')>();
   return {
     ...actual,
     getInvoices: vi.fn(),
   };
 });
 
-import { getInvoices } from './invoices.api';
+import { getInvoices, type PagedResult } from '../api/invoices.api';
 const mockGetInvoices = getInvoices as ReturnType<typeof vi.fn>;
 
 const emptyResult: PagedResult = { items: [], totalCount: 0, page: 0, pageSize: 25 };

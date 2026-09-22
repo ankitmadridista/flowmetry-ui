@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { FilterBar } from './FilterBar';
-import type { InvoiceFilter } from './invoices.api';
+import type { InvoiceFilter } from '../api/invoices.api';
 
 const emptyFilter: InvoiceFilter = {};
 

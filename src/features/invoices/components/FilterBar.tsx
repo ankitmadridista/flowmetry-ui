@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { InvoiceFilter } from "../api/invoices.api";
-import DatePicker from "../../../components/DatePicker";
+import DatePicker from "../../../shared/components/DatePicker";
 
 interface FilterBarProps {
   value: InvoiceFilter;
