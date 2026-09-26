@@ -1,5 +1,6 @@
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+// import './datepicker.css'; <-- Removed!
 
 interface Props {
   id?: string;

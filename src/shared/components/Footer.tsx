@@ -6,9 +6,9 @@ export default function Footer() {
           © {new Date().getFullYear()} Flowmetry
         </p>
         <div className="flex gap-6 text-sm text-foreground/60">
-          <a href="#" className="hover:text-heading transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-heading transition-colors">Terms of Service</a>
-          <a href="mailto:support@flowmetry.com" className="hover:text-heading transition-colors">Contact</a>
+          {/* <a href="#" className="hover:text-heading transition-colors">Privacy Policy</a>
+          <a href="#" className="hover:text-heading transition-colors">Terms of Service</a> */}
+          {/* <a href="mailto:support@flowmetry.com" className="hover:text-heading transition-colors">Contact</a> */}
         </div>
       </div>
     </footer>

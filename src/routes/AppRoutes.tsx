@@ -17,7 +17,7 @@ const CustomerDetailPage = lazy(
   () => import("../features/customers/pages/CustomerDetailPage"),
 );
 const SecurityAdminPage = lazy(
-  () => import("../features/security-admin/SecurityAdminPage"),
+  () => import("../features/security-admin/pages/SecurityAdminPage"),
 );
 
 const PageLoader = () => (
