@@ -1,7 +1,6 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import AppNavbar from "../shared/components/AppNavbar";
 import Footer from "../shared/components/Footer";
-import AppRoutes from "../routes/AppRoutes";
 import { useAuth } from "../features/auth/contexts/AuthContext";
 import { PermissionProvider } from "../features/auth/contexts/PermissionContext";
 
@@ -14,9 +13,11 @@ export default function ProtectedLayout() {
     <PermissionProvider>
       <div className="min-h-screen flex flex-col bg-background text-foreground">
         <AppNavbar />
-        <main className="grow">
-          <AppRoutes />
+
+        <main className="flex-1 w-full pb-12">
+          <Outlet />
         </main>
+
         <Footer />
       </div>
     </PermissionProvider>

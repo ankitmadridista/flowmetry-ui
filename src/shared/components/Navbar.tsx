@@ -65,25 +65,25 @@ export default function Navbar({
   }
 
   return (
-    <nav className="flex items-center justify-between p-6 border-b border-border w-full bg-background relative z-50">
+    <nav className="flex items-center justify-between px-6 h-14 border-b border-border w-full bg-background relative z-50">
       {/* Left side: Brand ONLY */}
       <span
-        className="text-2xl font-heading font-bold text-heading cursor-pointer"
+        className="text-[18px] tracking-tight font-heading font-bold text-heading cursor-pointer"
         onClick={() => navigate("/")}
       >
         Flowmetry
       </span>
 
       {/* Right side: EVERYTHING ELSE (Links + Theme + Actions) */}
-      <div className="hidden md:flex gap-6 items-center">
+      <div className="hidden md:flex gap-4 items-center">
         {navLinks}
 
         {/* Subtle divider line between links and actions */}
-        <div className="w-px h-6 bg-border mx-2"></div>
+        <div className="w-px h-5 bg-border mx-1"></div>
 
         <button
           onClick={toggle}
-          className="p-2 text-foreground hover:text-heading transition-colors rounded-md hover:bg-code"
+          className="p-1.5 text-foreground hover:text-heading transition-colors rounded-md hover:bg-code"
           aria-label="Toggle theme"
         >
           {theme === "dark" ? <SunIcon /> : <MoonIcon />}
@@ -93,7 +93,7 @@ export default function Navbar({
       </div>
 
       {/* Mobile Hamburger & Theme */}
-      <div className="flex md:hidden items-center gap-2">
+      <div className="flex md:hidden items-center gap-1">
         <button
           onClick={toggle}
           className="p-2 text-foreground hover:text-heading transition-colors rounded-md"
@@ -140,7 +140,6 @@ export default function Navbar({
         </button>
       </div>
 
-      {/* Mobile Menu Dropdown */}
       {menuOpen && (
         <div className="absolute top-full left-0 w-full bg-background border-b border-border shadow-theme p-4 flex flex-col gap-4 md:hidden">
           {mobileMenuContent}
