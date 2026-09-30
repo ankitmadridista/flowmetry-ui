@@ -3,7 +3,7 @@ import { technologies } from "../Data/technologyData";
 export default function TechnologySection(): React.JSX.Element {
   return (
     <section className="px-6 py-24 max-w-6xl mx-auto w-full border-t border-border/50">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+      <div className="text-center mb-16 max-w-2xl mx-auto">
         <div className="max-w-xl">
           <h2 className="text-3xl font-heading font-semibold text-heading mb-4 tracking-tight">
             Built on a Modern Stack
