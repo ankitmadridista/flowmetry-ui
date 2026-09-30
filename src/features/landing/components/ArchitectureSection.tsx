@@ -1,10 +1,9 @@
 import { architectureNodes } from "../Data/architectureData";
 
-
 export default function ArchitectureSection(): React.JSX.Element {
   return (
-    <section className="px-6 py-24 max-w-4xl mx-auto w-full border-t border-border/50">
-      <div className="text-center mb-16">
+    <section className="px-6 py-24 max-w-6xl mx-auto w-full border-t border-border/50">
+      <div className="text-center mb-16 max-w-2xl mx-auto">
         <h2 className="text-3xl font-heading font-semibold text-heading mb-4 tracking-tight">
           Clean Architecture
         </h2>
